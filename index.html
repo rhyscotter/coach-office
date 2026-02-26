@@ -1,723 +1,546 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Coach's Office — Black Nike + Club Lines</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Coach's Office</title>
+<style>
+  :root{
+    --panel:rgba(17,17,17,.88);
+    --border:rgba(255,255,255,.10);
+    --text:#fff;
+    --muted:rgba(255,255,255,.62);
 
-  <style>
-    :root{
-      /* ✅ still black base */
-      --bg:#050607;
+    /* ✅ THESE GET OVERRIDDEN BY CLUB THEME */
+    --accent:#7B2EFF;
+    --accent2:#B266FF;
+    --clubGlow: rgba(123,46,255,.18);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:transparent;color:var(--text);font-family:Arial,sans-serif}
+  .stage{
+    min-height:100vh;padding:22px;
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(255,255,255,.05), transparent 60%),
+      linear-gradient(180deg,#000 0%,#050505 100%);
+    position:relative;overflow:hidden;
+  }
+  .stage::before{
+    content:"";position:absolute; inset:-40% -20%;
+    transform:rotate(-14deg);
+    background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
+    opacity:.18;pointer-events:none;
+  }
+  .stage::after{
+    content:"";position:absolute; inset:0;
+    background:radial-gradient(800px 520px at 80% 18%, var(--clubGlow), transparent 62%);
+    opacity:.9;pointer-events:none;
+    animation:glowPulse 2.8s ease-in-out infinite;
+  }
+  @keyframes glowPulse{ 0%{opacity:.55} 50%{opacity:1} 100%{opacity:.55} }
 
-      /* glass */
-      --stroke: rgba(255,255,255,.12);
-      --stroke2: rgba(255,255,255,.08);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.62);
-      --shadow: 0 20px 70px rgba(0,0,0,.58);
-      --shadow2: 0 10px 30px rgba(0,0,0,.45);
-      --radius: 18px;
+  .wrap{max-width:980px;margin:0 auto;position:relative;z-index:2}
 
-      /* ✅ default RED theme (can be overridden per club) */
-      --accent:#C8102E;
-      --accent2:#FF4D6D;
+  .title{
+    font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+    font-size:52px;text-transform:uppercase;letter-spacing:1px;line-height:1;
+    position:relative;padding-bottom:10px;
+  }
+  .title::after{
+    content:"";position:absolute;left:0;bottom:0;height:6px;width:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, var(--accent), transparent);
+    animation:underlineSweep 1.8s linear infinite;
+  }
+  @keyframes underlineSweep{
+    0%{filter:brightness(1); transform:translateX(-2px)}
+    50%{filter:brightness(1.12); transform:translateX(2px)}
+    100%{filter:brightness(1); transform:translateX(-2px)}
+  }
 
-      /* lines */
-      --lineGlow: .60;
-      --lineSpeed: 2.35s;
-    }
+  .sub{color:var(--muted);font-size:13px;margin-top:6px;max-width:650px}
 
-    *{
-      box-sizing:border-box;
-      font-family: Impact, Haettenschweiler, "Arial Black", sans-serif !important;
-      letter-spacing:.8px;
-    }
+  /* ✅ subtle coach line */
+  .coachLine{
+    margin-top:8px;
+    color:rgba(255,255,255,.62);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .coachDot{
+    width:8px;height:8px;border-radius:999px;
+    background:var(--accent);
+    box-shadow:0 0 18px var(--clubGlow);
+    opacity:.9;
+  }
+  .coachName{
+    color:rgba(255,255,255,.92);
+    font-weight:900;
+    letter-spacing:.2px;
+  }
 
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      color:var(--text);
-      overflow-x:hidden;
-      background: linear-gradient(180deg, #040506, var(--bg));
-    }
+  .grid{margin-top:16px;display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+  @media (max-width: 860px){.grid{grid-template-columns:1fr}}
 
-    /* grain */
-    .grain{
-      pointer-events:none;
-      position:fixed; inset:0;
-      z-index:3;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-      opacity:.12;
-      animation: grainMove 10s steps(10) infinite;
-    }
-    @keyframes grainMove{
-      0%{ transform:translate(0,0); }
-      20%{ transform:translate(-2%,1%); }
-      40%{ transform:translate(-1%,-2%); }
-      60%{ transform:translate(2%,1%); }
-      80%{ transform:translate(1%,-1%); }
-      100%{ transform:translate(0,0); }
-    }
+  .panel{
+    background:rgba(17,17,17,.88);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:18px;padding:14px;position:relative;overflow:hidden;
+  }
+  .panel::before{
+    content:"";position:absolute; inset:-60% -20%;
+    transform:rotate(-12deg);
+    background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.05), rgba(255,255,255,0));
+    opacity:.22;pointer-events:none;
+  }
+  .panelInner{position:relative;z-index:2}
 
-    .page{
-      max-width:1180px;
-      margin:0 auto;
-      padding:18px 16px 28px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      position:relative;
-      z-index:5;
-    }
+  .h2{
+    font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;
+    font-size:26px;text-transform:uppercase;letter-spacing:.8px;margin:0;padding-bottom:8px;
+    position:relative;
+  }
+  .h2::after{
+    content:"";position:absolute;left:0;bottom:0;height:4px;width:100%;
+    border-radius:999px;background:linear-gradient(90deg, var(--accent), transparent);
+    transform:scaleX(.35);transform-origin:left;transition:.18s ease;opacity:.95;
+  }
+  .panel:hover .h2::after{transform:scaleX(1)}
 
-    /* premium glass card */
-    .card{
-      position:relative;
-      overflow:hidden;
-      border-radius: var(--radius);
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      padding:16px;
-      isolation:isolate;
-    }
+  .tiny{color:rgba(255,255,255,.62);font-size:12px;margin-top:10px}
 
-    /* ✅ animated club lines */
-    .clubLines{
-      position:absolute;
-      inset:-2px;
-      pointer-events:none;
-      opacity:.95;
-      z-index:0;
-    }
-    .clubLines::before{
-      content:"";
-      position:absolute;
-      left:-20%;
-      top:10px;
-      width:140%;
-      height:2px;
-      background:
-        linear-gradient(90deg,
-          transparent,
-          color-mix(in srgb, var(--accent) 92%, transparent),
-          rgba(255,255,255,.14),
-          color-mix(in srgb, var(--accent2) 88%, transparent),
-          transparent);
-      filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) calc(var(--lineGlow) * 100%), transparent));
-      animation: sweepLine var(--lineSpeed) linear infinite;
-    }
-    .clubLines::after{
-      content:"";
-      position:absolute;
-      left:-30%;
-      bottom:10px;
-      width:160%;
-      height:2px;
-      background:
-        linear-gradient(90deg,
-          transparent,
-          rgba(255,255,255,.12),
-          color-mix(in srgb, var(--accent2) 92%, transparent),
-          color-mix(in srgb, var(--accent) 92%, transparent),
-          transparent);
-      filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent2) calc(var(--lineGlow) * 100%), transparent));
-      animation: sweepLine2 calc(var(--lineSpeed) * 1.18) linear infinite;
-    }
-    @keyframes sweepLine{ 0%{ transform:translateX(-18%) } 100%{ transform:translateX(18%) } }
-    @keyframes sweepLine2{ 0%{ transform:translateX(16%) } 100%{ transform:translateX(-16%) } }
+  /* Pills */
+  .pillRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 12px;border-radius:999px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.14);
+    color:#fff;font-weight:900;letter-spacing:.6px;text-transform:uppercase;
+  }
+  .pill strong{font-family:Impact,Haettenschweiler,'Arial Narrow Bold',sans-serif;font-size:18px;letter-spacing:.8px}
+  .glow{box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 0 32px var(--clubGlow);}
 
-    .card > *{ position:relative; z-index:1; }
+  /* ✅ MENU layout (cards) */
+  .menuGrid{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  @media (max-width: 520px){.menuGrid{grid-template-columns:1fr}}
+  .menuCard{
+    text-align:left;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.03);
+    padding:12px;
+    cursor:pointer;
+    transition:.14s ease;
+    position:relative;
+    overflow:hidden;
+  }
+  .menuCard::after{
+    content:"";position:absolute;left:12px;right:12px;bottom:10px;height:4px;border-radius:999px;
+    background:linear-gradient(90deg, var(--accent), transparent);
+    transform:scaleX(0);transform-origin:left;transition:.18s ease;opacity:.95;
+  }
+  .menuCard:hover{
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.16);
+    transform:translateY(-1px);
+    box-shadow:0 0 26px var(--clubGlow);
+  }
+  .menuCard:hover::after{transform:scaleX(1)}
+  .menuTitle{
+    font-weight:900;
+    letter-spacing:.6px;
+    text-transform:uppercase;
+    font-size:12px;
+    color:rgba(255,255,255,.92);
+  }
+  .menuDesc{
+    margin-top:6px;
+    color:rgba(255,255,255,.62);
+    font-size:12px;
+    line-height:1.4;
+  }
+  .menuBadge{
+    display:inline-flex;
+    margin-top:10px;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.04);
+    font-weight:900;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    font-size:11px;
+    color:rgba(255,255,255,.92);
+  }
 
-    /* header */
-    .topbar{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      flex-wrap:wrap;
-    }
-    .titleWrap{ min-width: 280px; }
-    .title{
-      margin:0;
-      font-size:42px;
-      letter-spacing:3px;
-      text-transform:uppercase;
-      line-height:1.0;
-    }
-    .title .accent{ color:var(--accent); }
-    .sub{
-      margin:10px 0 0;
-      font-size:13px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      color:var(--muted);
-    }
+  /* To-do UI */
+  .todoTop{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;
+  }
+  .input{
+    flex:1;min-width:220px;
+    border-radius:14px;padding:12px 12px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.03);
+    color:#fff;outline:none;
+  }
+  .input::placeholder{color:rgba(255,255,255,.45)}
+  .todoList{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .todoItem{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.03);
+    border-radius:14px;padding:10px 10px;transition:.14s ease;
+  }
+  .todoItem:hover{
+    background:rgba(255,255,255,.06);
+    border-color:rgba(255,255,255,.16);
+    transform:translateY(-1px);
+    box-shadow:0 0 26px var(--clubGlow);
+  }
+  .todoText{
+    font-weight:900;letter-spacing:.2px;
+    color:rgba(255,255,255,.92);
+    word-break:break-word;
+  }
+  .todoMeta{
+    margin-top:2px;color:rgba(255,255,255,.62);
+    font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:900;
+  }
+  .todoLeft{display:flex;flex-direction:column}
+  .iconBtn{
+    width:40px;height:40px;border-radius:14px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.04);
+    cursor:pointer;transition:.14s ease;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .iconBtn:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.18);
+    box-shadow:0 0 22px var(--clubGlow);
+    transform:translateY(-1px);
+  }
+  .iconBtn svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;opacity:.9}
+  .empty{
+    border:1px dashed rgba(255,255,255,.18);
+    background:rgba(255,255,255,.02);
+    border-radius:14px;padding:12px;color:rgba(255,255,255,.62);
+    font-weight:900;letter-spacing:.4px;text-transform:uppercase;font-size:11px;
+  }
 
-    /* ✅ ALL IN ONE + club image */
-    .allInOne{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-end;
-      gap:8px;
-    }
-    .allInOneLabel{
-      margin:0;
-      font-size:13px;
-      letter-spacing:2.4px;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.78);
-    }
-    .clubBadge{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      border-radius:999px;
-      padding:8px 10px;
-      text-transform:uppercase;
-      letter-spacing:1.8px;
-      font-size:12px;
-      white-space:nowrap;
-    }
-    .clubImg{
-      width:38px;
-      height:38px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
-      flex:0 0 auto;
-      object-fit:cover;
-    }
+  .navBtn{
+    padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.04);color:#fff;font-weight:900;letter-spacing:.7px;text-transform:uppercase;
+    cursor:pointer;transition:.14s ease;position:relative;overflow:hidden;
+  }
+  .navBtn::after{
+    content:"";position:absolute;left:12px;right:12px;bottom:10px;height:4px;border-radius:999px;
+    background:linear-gradient(90deg, var(--accent), transparent);
+    transform:scaleX(0);transform-origin:left;transition:.18s ease;opacity:.95;
+  }
+  .navBtn:hover{
+    transform:translateY(-1px);background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.18);box-shadow:0 0 28px var(--clubGlow);
+  }
+  .navBtn:hover::after{transform:scaleX(1)}
+  .navBtn:active{transform:translateY(0px) scale(.99)}
 
-    /* layout */
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:14px;
-    }
-    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
-
-    .sectionTitle{
-      margin:0 0 12px;
-      font-size:14px;
-      letter-spacing:2px;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.76);
-    }
-
-    /* quick actions */
-    .actions{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-    }
-    @media (max-width: 780px){ .actions{ grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 520px){ .actions{ grid-template-columns: 1fr; } }
-
-    .actionBtn{
-      position:relative;
-      overflow:hidden;
-      border-radius:18px;
-      border:1px solid var(--stroke2);
-      background: linear-gradient(180deg, rgba(0,0,0,.26), rgba(255,255,255,.04));
-      box-shadow: var(--shadow2);
-      padding:14px;
-      cursor:pointer;
-      text-transform:uppercase;
-      color:#fff; /* ✅ white text */
-      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-      min-height:74px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:8px;
-    }
-    .actionBtn::before{
-      content:"";
-      position:absolute; inset:-1px;
-      background: radial-gradient(520px 160px at 20% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%);
-      opacity:0;
-      transition: opacity .15s ease;
-      pointer-events:none;
-    }
-    .actionBtn:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 70%, rgba(255,255,255,.10));
-      box-shadow: 0 16px 34px rgba(0,0,0,.55), 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
-      animation: pulse 1.4s infinite;
-    }
-    .actionBtn:hover::before{ opacity:1; }
-    @keyframes pulse{
-      0%,100%{ filter: drop-shadow(0 0 0 transparent); }
-      50%{ filter: drop-shadow(0 0 14px color-mix(in srgb, var(--accent) 60%, transparent)); }
-    }
-    .aName{ margin:0; font-size:16px; letter-spacing:2px; }
-    .aDesc{ margin:0; font-size:12px; letter-spacing:1.6px; color:rgba(255,255,255,.62); line-height:1.25; }
-
-    /* upcoming */
-    .scheduleList{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .eventRow{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      border-radius:16px;
-      padding:12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-      text-transform:uppercase;
-    }
-    .eventRow:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,.10));
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
-    }
-    .eventLeft{ min-width:0; }
-    .eventTitle{
-      margin:0;
-      font-size:13px;
-      letter-spacing:1.8px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .eventMeta{
-      margin:6px 0 0;
-      font-size:12px;
-      letter-spacing:1.4px;
-      color:rgba(255,255,255,.62);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .pill{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.80);
-      border-radius:999px;
-      padding:7px 10px;
-      font-size:11px;
-      letter-spacing:1.6px;
-      white-space:nowrap;
-      text-transform:uppercase;
-    }
-    .pill.accent{
-      border-color: color-mix(in srgb, var(--accent) 35%, rgba(255,255,255,.12));
-      background: color-mix(in srgb, var(--accent) 12%, transparent);
-    }
-
-    /* to-do */
-    .createTask{
-      display:flex;
-      gap:10px;
-      margin-bottom:14px;
-    }
-    .createTask input{
-      flex:1;
-      background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:14px;
-      padding:12px;
-      color:#fff;
-      text-transform:uppercase;
-    }
-    .createTask input::placeholder{ color: rgba(255,255,255,.45); }
-    .createTask input:focus{
-      outline:none;
-      border-color: color-mix(in srgb, var(--accent) 75%, rgba(255,255,255,.14));
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
-    }
-    .createTask button{
-      border:1px solid color-mix(in srgb, var(--accent) 85%, rgba(255,255,255,.12));
-      background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 26%, transparent), color-mix(in srgb, var(--accent) 14%, transparent));
-      color:#fff;
-      border-radius:14px;
-      padding:12px 16px;
-      cursor:pointer;
-      text-transform:uppercase;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
-    }
-    .createTask button:hover{
-      transform: translateY(-1px);
-      background: color-mix(in srgb, var(--accent) 85%, transparent);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
-      animation:pulse 1.4s infinite;
-    }
-
-    .todoList{ display:flex; flex-direction:column; gap:10px; }
-    .todoItem{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      border-radius:16px;
-      padding:12px 12px 12px 14px;
-      text-transform:uppercase;
-      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .2s ease;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
-    }
-    .todoItem:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 55%, rgba(255,255,255,.10));
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
-    }
-    .todoText{
-      min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-    .trashBtn{
-      width:38px;height:38px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease, background .15s ease;
-      flex:0 0 auto;
-    }
-    .trashBtn svg{ width:18px;height:18px; fill: rgba(255,255,255,.90); }
-    .trashBtn:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--accent) 70%, rgba(255,255,255,.12));
-      background: color-mix(in srgb, var(--accent) 16%, transparent);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
-      animation: pulse 1.4s infinite;
-    }
-
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      background: rgba(5,6,7,.80);
-      border:1px solid rgba(255,255,255,.12);
-      padding:10px 14px;
-      border-radius:14px;
-      box-shadow: var(--shadow2);
-      display:none;
-      gap:10px;
-      align-items:center;
-      z-index:999;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      text-transform:uppercase;
-      letter-spacing:1.6px;
-    }
-    .toast strong{ color: var(--accent2); }
-  </style>
+  .err{margin-top:14px;color:#fff;background:rgba(255,0,0,.12);border:1px solid rgba(255,0,0,.35);padding:12px;border-radius:14px}
+</style>
 </head>
 
 <body>
-  <div class="grain"></div>
+  <div class="stage">
+    <div class="wrap">
+      <div class="title">Coach’s Office</div>
+      <div class="sub" id="subtitle">Your tools, shortcuts, and to-do list — all in one place.</div>
 
-  <div class="page">
-    <!-- HEADER -->
-    <section class="card">
-      <div class="clubLines" aria-hidden="true"></div>
+      <!-- ✅ coach line only -->
+      <div class="coachLine" id="coachLine">
+        <span class="coachDot" aria-hidden="true"></span>
+        <span>Coach:</span>
+        <span class="coachName" id="coachNameText">—</span>
+      </div>
 
-      <div class="topbar">
-        <div class="titleWrap">
-          <h1 class="title"><span class="accent">COACH'S</span> OFFICE</h1>
-          <p class="sub">BLACK NIKE THEME • ANIMATED CLUB LINES • QUICK NAV</p>
+      <div class="grid">
+        <!-- LEFT: MENU -->
+        <div class="panel">
+          <div class="panelInner">
+            <div class="h2">Menu</div>
+            <div class="sub" style="margin-top:6px">
+              Choose where you want to go.
+            </div>
+
+            <div class="menuGrid">
+              <button class="menuCard" id="btnPlayerDev" type="button">
+                <div class="menuTitle">Player Development</div>
+                <div class="menuDesc">IDPs, goals, feedback, progress tracking.</div>
+                <div class="menuBadge">Go</div>
+              </button>
+
+              <button class="menuCard" id="btnSessionPlanning" type="button">
+                <div class="menuTitle">Session Planning</div>
+                <div class="menuDesc">Build sessions, patterns, diagrams, clips.</div>
+                <div class="menuBadge">Go</div>
+              </button>
+
+              <button class="menuCard" id="btnCoachDashboard" type="button">
+                <div class="menuTitle">Coach Dashboard</div>
+                <div class="menuDesc">Schedule, team tools, alerts, admin.</div>
+                <div class="menuBadge">Go</div>
+              </button>
+
+              <button class="menuCard" id="btnModules" type="button">
+                <div class="menuTitle">Modules</div>
+                <div class="menuDesc">Learning content, curriculum, notes.</div>
+                <div class="menuBadge">Go</div>
+              </button>
+
+              <!-- ✅ Added Schedule List (requested route) -->
+              <button class="menuCard" id="btnScheduleList" type="button" style="grid-column: 1 / -1;">
+                <div class="menuTitle">Schedule List</div>
+                <div class="menuDesc">View all upcoming events and sessions.</div>
+                <div class="menuBadge">Go</div>
+              </button>
+            </div>
+
+            <div class="tiny" id="actionStatus">Ready.</div>
+            <div id="error"></div>
+          </div>
         </div>
 
-        <!-- ✅ ALL IN ONE + live club image -->
-        <div class="allInOne">
-          <p class="allInOneLabel">ALL IN ONE</p>
-          <div class="clubBadge" title="Club from URL">
-            <img id="clubImg" class="clubImg" alt="Club" />
-            <span id="clubLabel">CLUB</span>
+        <!-- RIGHT: To-do list -->
+        <div class="panel">
+          <div class="panelInner">
+            <div class="h2">To-Do</div>
+
+            <!-- ✅ Items pill moved here -->
+            <div class="pillRow">
+              <div class="pill glow"><span>Items:</span> <strong id="todoCount">0</strong></div>
+            </div>
+
+            <div class="todoTop">
+              <input class="input" id="todoInput" placeholder="Add a new to-do (e.g., 'Build out 3-2-2-1 patterns')"/>
+              <button class="navBtn" id="btnAddTodo" type="button">Add</button>
+            </div>
+
+            <div class="todoList" id="todoList"></div>
+
+            <div class="tiny">
+              Stored in this browser (localStorage).
+            </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <div class="grid">
-      <!-- LEFT -->
-      <section class="card">
-        <div class="clubLines" aria-hidden="true"></div>
-        <h2 class="sectionTitle">QUICK ACTIONS</h2>
-
-        <div class="actions">
-          <button class="actionBtn" data-action="PLAYER DEVELOPMENT">
-            <p class="aName">PLAYER DEVELOPMENT</p>
-            <p class="aDesc">idps • feedback • progress</p>
-          </button>
-
-          <button class="actionBtn" data-action="DASHBOARD">
-            <p class="aName">DASHBOARD</p>
-            <p class="aDesc">attendance • tasks • notes</p>
-          </button>
-
-          <button class="actionBtn" data-action="SESSION PLANNING">
-            <p class="aName">SESSION PLANNING</p>
-            <p class="aDesc">build • save • share plans</p>
-          </button>
-
-          <button class="actionBtn" data-action="SCHEDULING">
-            <p class="aName">SCHEDULING</p>
-            <p class="aDesc">events • rsvp • availability</p>
-          </button>
-
-          <button class="actionBtn" data-action="TEAM CHAT">
-            <p class="aName">TEAM CHAT</p>
-            <p class="aDesc">messages • files • groups</p>
-          </button>
-
-          <button class="actionBtn" data-action="VOICE ANALYSIS">
-            <p class="aName">VOICE ANALYSIS</p>
-            <p class="aDesc">metrics • tone • next actions</p>
-          </button>
-        </div>
-      </section>
-
-      <!-- RIGHT -->
-      <section class="card">
-        <div class="clubLines" aria-hidden="true"></div>
-
-        <h2 class="sectionTitle">UPCOMING</h2>
-        <div class="scheduleList" style="margin-bottom:14px;">
-          <div class="eventRow">
-            <div class="eventLeft">
-              <p class="eventTitle">U12 TRAINING — BUILD OUT</p>
-              <p class="eventMeta">THU 6:00PM • STEVENS FIELD</p>
-            </div>
-            <span class="pill accent">RSVP</span>
-          </div>
-
-          <div class="eventRow">
-            <div class="eventLeft">
-              <p class="eventTitle">U10 GAME DAY</p>
-              <p class="eventMeta">SAT 9:15AM • VETS COMPLEX</p>
-            </div>
-            <span class="pill">DETAILS</span>
-          </div>
-
-          <div class="eventRow">
-            <div class="eventLeft">
-              <p class="eventTitle">COACHES MEETING</p>
-              <p class="eventMeta">SUN 7:30PM • GOOGLE MEET</p>
-            </div>
-            <span class="pill">JOIN</span>
-          </div>
-        </div>
-
-        <h2 class="sectionTitle">TO DO</h2>
-        <div class="createTask">
-          <input id="taskInput" placeholder="CREATE NEW TASK..." />
-          <button id="addTaskBtn">ADD</button>
-        </div>
-
-        <div class="todoList" id="todoList">
-          <div class="todoItem">
-            <div class="todoText">PUBLISH SESSION PLAN</div>
-            <button class="trashBtn" aria-label="Delete task" title="Delete" data-delete="1">
-              <svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 7h2v9h-2v-9zm4 0h2v9h-2v-9zM7 10h2v9H7v-9z"/></svg>
-            </button>
-          </div>
-
-          <div class="todoItem">
-            <div class="todoText">IDP REVIEWS DUE • U12</div>
-            <button class="trashBtn" aria-label="Delete task" title="Delete" data-delete="1">
-              <svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 7h2v9h-2v-9zm4 0h2v9h-2v-9zM7 10h2v9H7v-9z"/></svg>
-            </button>
-          </div>
-
-          <div class="todoItem">
-            <div class="todoText">SEND PARENT MESSAGE</div>
-            <button class="trashBtn" aria-label="Delete task" title="Delete" data-delete="1">
-              <svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 7h2v9h-2v-9zm4 0h2v9h-2v-9zM7 10h2v9H7v-9z"/></svg>
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
 
-  <div class="toast" id="toast"><strong>COACH'S OFFICE</strong> <span id="toastText">ACTION</span></div>
+<script>
+  // ----------------------------
+  // Theming: prefer payload.theme
+  // ----------------------------
+  function applyThemeFromPayload(payload){
+    const theme = payload?.theme || null;
+    const accent  = (theme?.accent  || "#7B2EFF");
+    const accent2 = (theme?.accent2 || accent);
+    const glow    = (theme?.glow    || "rgba(123,46,255,.18)");
+    const r = document.documentElement.style;
+    r.setProperty("--accent", accent);
+    r.setProperty("--accent2", accent2);
+    r.setProperty("--clubGlow", glow);
+  }
 
-  <script>
-    // ===============================
-    // STRICT CLUB GUARD (NO FALLBACK)
-    // ===============================
-    function getClubSlugStrict(){
-      const params = new URLSearchParams(window.location.search);
-      const club = params.get("club");
-      if(!club){
-        window.location.href = "/access-denied";
-        return null;
-      }
-      return String(club).trim().toLowerCase();
+  function safe(s){ return String(s ?? "").replace(/[<>]/g,""); }
+  const $error = document.getElementById("error");
+  function setError(msg){ $error.innerHTML = msg ? `<div class="err">${safe(msg)}</div>` : ""; }
+
+  const $coachNameText = document.getElementById("coachNameText");
+  const $todoCount  = document.getElementById("todoCount");
+  const $actionStatus = document.getElementById("actionStatus");
+
+  const $btnPlayerDev = document.getElementById("btnPlayerDev");
+  const $btnSessionPlanning = document.getElementById("btnSessionPlanning");
+  const $btnCoachDashboard = document.getElementById("btnCoachDashboard");
+  const $btnModules = document.getElementById("btnModules");
+  const $btnScheduleList = document.getElementById("btnScheduleList");
+
+  const $todoInput = document.getElementById("todoInput");
+  const $btnAddTodo = document.getElementById("btnAddTodo");
+  const $todoList = document.getElementById("todoList");
+
+  // ----------------------------
+  // Wix navigation helper
+  // ----------------------------
+  // ✅ Use postMessage to parent (Wix) to navigate.
+  // ✅ Wix page code should listen for COACH_OFFICE_NAVIGATE and call wixLocation.to(path)
+  function navigateTo(path){
+    setError("");
+    $actionStatus.textContent = "Opening…";
+    try{
+      window.parent.postMessage({ type:"COACH_OFFICE_NAVIGATE", path }, "*");
+    }catch(_){}
+    setTimeout(()=> { $actionStatus.textContent = "Ready."; }, 900);
+  }
+
+  // Requested routes
+  $btnPlayerDev.addEventListener("click", ()=> navigateTo("/player-development"));
+  $btnSessionPlanning.addEventListener("click", ()=> navigateTo("/session-planning"));
+  $btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard-v2"));
+  $btnModules.addEventListener("click", ()=> navigateTo("/modules-homepage"));
+  $btnScheduleList.addEventListener("click", ()=> navigateTo("/schedule-list"));
+
+  // ----------------------------
+  // To-do storage
+  // ----------------------------
+  const LS_KEY = "coachOffice.todos.v1";
+
+  function loadTodos(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    }catch(_){
+      return [];
+    }
+  }
+  function saveTodos(arr){
+    localStorage.setItem(LS_KEY, JSON.stringify(arr || []));
+  }
+
+  let todos = loadTodos();
+
+  function fmtStamp(ts){
+    try{
+      const d = new Date(ts);
+      return new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric"}).format(d);
+    }catch(_){
+      return "";
+    }
+  }
+
+  function renderTodos(){
+    $todoCount.textContent = String(todos.length);
+
+    $todoList.innerHTML = "";
+    if (!todos.length){
+      const div = document.createElement("div");
+      div.className = "empty";
+      div.textContent = "No to-dos yet — add one above.";
+      $todoList.appendChild(div);
+      return;
     }
 
-    // ===============================
-    // CLUB THEMES (edit to match your Clubs collection)
-    // ===============================
-    const CLUBS = {
-      cherrybrook: { name:"CHERRYBROOK", accent:"#C8102E", accent2:"#FF4D6D" },
-      monmouth:    { name:"MONMOUTH",    accent:"#C8102E", accent2:"#FF4D6D" },  // keep red if you want
-      rumson:      { name:"RUMSON",      accent:"#C8102E", accent2:"#FF4D6D" },  // keep red if you want
-      dragons:     { name:"DRAGONS",     accent:"#C8102E", accent2:"#FF4D6D" },  // keep red if you want
-      worldclass:  { name:"WORLD CLASS", accent:"#C8102E", accent2:"#FF4D6D" }   // keep red if you want
-    };
+    todos.forEach((t, idx) => {
+      const div = document.createElement("div");
+      div.className = "todoItem";
 
-    // ===============================
-    // Live club "image" (no URL needed)
-    // Creates a premium circle badge SVG with initials.
-    // ===============================
-    function initials(name){
-      const parts = String(name||"").trim().split(/\s+/).filter(Boolean);
-      const a = (parts[0] || "C")[0];
-      const b = (parts.length > 1 ? parts[parts.length-1][0] : (parts[0]||"O")[1] || "O");
-      return (a + b).toUpperCase();
-    }
-
-    function clubBadgeSvg({ label, accent, accent2 }){
-      const ini = initials(label);
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
-          <defs>
-            <radialGradient id="g" cx="30%" cy="30%" r="80%">
-              <stop offset="0%" stop-color="${accent2}" stop-opacity="0.95"/>
-              <stop offset="55%" stop-color="${accent}" stop-opacity="0.95"/>
-              <stop offset="100%" stop-color="#0b0c0f" stop-opacity="1"/>
-            </radialGradient>
-            <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="${accent}" flood-opacity="0.35"/>
-            </filter>
-          </defs>
-          <circle cx="100" cy="100" r="92" fill="url(#g)" filter="url(#s)"/>
-          <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
-          <text x="100" y="118" text-anchor="middle"
-                font-family="Impact, Haettenschweiler, Arial Black"
-                font-size="86" fill="rgba(255,255,255,0.92)"
-                letter-spacing="6">${ini}</text>
-        </svg>`;
-      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-    }
-
-    // ===============================
-    // BUTTON ROUTES (your real pages)
-    // ===============================
-    const ROUTES = {
-      "PLAYER DEVELOPMENT": "/playerdevelopment",
-      "DASHBOARD": "/coach-dashboard",
-      "SESSION PLANNING": "/session-planning",
-      "SCHEDULING": "/schedule-list",
-
-      // placeholders (update if different)
-      "TEAM CHAT": "/team-chat",
-      "VOICE ANALYSIS": "/voice-analysis"
-    };
-
-    // ===============================
-    // INIT
-    // ===============================
-    const clubSlug = getClubSlugStrict();
-    if (!clubSlug) { /* redirected */ }
-
-    // Apply theme + labels + badge image
-    (function applyClubTheme(){
-      const entry = CLUBS[clubSlug] || { name: clubSlug.toUpperCase(), accent: "#C8102E", accent2:"#FF4D6D" };
-
-      document.documentElement.style.setProperty("--accent", entry.accent);
-      document.documentElement.style.setProperty("--accent2", entry.accent2);
-
-      const labelEl = document.getElementById("clubLabel");
-      if (labelEl) labelEl.textContent = entry.name;
-
-      const imgEl = document.getElementById("clubImg");
-      if (imgEl) imgEl.src = clubBadgeSvg({ label: entry.name, accent: entry.accent, accent2: entry.accent2 });
-    })();
-
-    // Make Quick Action buttons navigate to your Wix pages (keeping ?club=)
-    document.querySelectorAll(".actionBtn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const key = String(btn.getAttribute("data-action") || "").trim().toUpperCase();
-        const route = ROUTES[key];
-        if (!route) return;
-
-        const club = getClubSlugStrict();
-        if (!club) return;
-
-        window.location.href = `${route}?club=${encodeURIComponent(club)}`;
-      });
-    });
-
-    // To-do add + delete
-    const input = document.getElementById("taskInput");
-    const addBtn = document.getElementById("addTaskBtn");
-    const list = document.getElementById("todoList");
-
-    addBtn.addEventListener("click", addTask);
-    input.addEventListener("keypress", e => { if (e.key === "Enter") addTask(); });
-
-    list.addEventListener("click", (e) => {
-      const del = e.target.closest("[data-delete]");
-      if (!del) return;
-      const item = del.closest(".todoItem");
-      if (!item) return;
-
-      item.style.opacity = "0";
-      item.style.transform = "translateY(2px)";
-      setTimeout(() => item.remove(), 180);
-      showToast("TASK DELETED");
-    });
-
-    function addTask(){
-      const value = (input.value || "").trim();
-      if(!value) return;
-
-      const item = document.createElement("div");
-      item.className = "todoItem";
+      const left = document.createElement("div");
+      left.className = "todoLeft";
 
       const text = document.createElement("div");
       text.className = "todoText";
-      text.textContent = value.toUpperCase();
+      text.textContent = String(t.text || "");
 
-      const delBtn = document.createElement("button");
-      delBtn.className = "trashBtn";
-      delBtn.setAttribute("aria-label","Delete task");
-      delBtn.setAttribute("title","Delete");
-      delBtn.setAttribute("data-delete","1");
-      delBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 7h2v9h-2v-9zm4 0h2v9h-2v-9zM7 10h2v9H7v-9z"/></svg>`;
+      const meta = document.createElement("div");
+      meta.className = "todoMeta";
+      meta.textContent = t.createdAt ? ("Added " + fmtStamp(t.createdAt)) : "Added";
 
-      item.appendChild(text);
-      item.appendChild(delBtn);
-      list.prepend(item);
+      left.appendChild(text);
+      left.appendChild(meta);
 
-      input.value = "";
-      showToast("TASK ADDED");
+      const del = document.createElement("button");
+      del.className = "iconBtn";
+      del.setAttribute("aria-label","Delete");
+      del.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M8 6V4h8v2"></path>
+          <path d="M6 6l1 16h10l1-16"></path>
+          <path d="M10 11v6"></path>
+          <path d="M14 11v6"></path>
+        </svg>
+      `;
+      del.addEventListener("click", () => {
+        todos.splice(idx, 1);
+        saveTodos(todos);
+        renderTodos();
+      });
+
+      div.appendChild(left);
+      div.appendChild(del);
+      $todoList.appendChild(div);
+    });
+  }
+
+  function addTodoFromInput(){
+    setError("");
+    const text = String($todoInput.value || "").trim();
+    if (!text){
+      setError("Please type a to-do item first.");
+      return;
+    }
+    const item = { text, createdAt: Date.now() };
+    todos.unshift(item);
+    saveTodos(todos);
+    $todoInput.value = "";
+    renderTodos();
+  }
+
+  $btnAddTodo.addEventListener("click", addTodoFromInput);
+  $todoInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") addTodoFromInput();
+  });
+
+  // ----------------------------
+  // Receive init from Wix
+  // ----------------------------
+  window.addEventListener("message", (ev) => {
+    const data = ev.data;
+    if (!data) return;
+
+    if (data.type === "COACH_OFFICE_ERROR"){
+      setError(data.message || "Something went wrong.");
+      return;
     }
 
-    // Toast
-    const toast = document.getElementById("toast");
-    const toastText = document.getElementById("toastText");
-    let toastTimer = null;
+    if (data.type === "COACH_OFFICE_INIT"){
+      applyThemeFromPayload(data);
 
-    function showToast(msg){
-      toastText.textContent = msg;
-      toast.style.display = "flex";
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.style.display = "none", 1400);
+      const coachLabel = data.coachName ? String(data.coachName) : "Coach";
+      $coachNameText.textContent = coachLabel;
+
+      if (Array.isArray(data.todos)){
+        todos = data.todos.map(x => ({
+          text: String(x?.text || "").trim(),
+          createdAt: x?.createdAt || Date.now()
+        })).filter(x => x.text);
+        saveTodos(todos);
+      }
+
+      renderTodos();
+      return;
     }
-  </script>
+  });
+
+  // Defaults if Wix never sends init
+  $coachNameText.textContent = "Coach";
+  renderTodos();
+
+  // Tell Wix iframe is ready
+  try { window.parent.postMessage({ type:"IFRAME_READY", view:"coachOffice" }, "*"); } catch(_) {}
+</script>
 </body>
 </html>
