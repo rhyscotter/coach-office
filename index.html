@@ -382,10 +382,8 @@
   const $todoList = document.getElementById("todoList");
 
   // ----------------------------
-  // Wix navigation helper
+  // Navigation (Wix will route)
   // ----------------------------
-  // ✅ Use postMessage to parent (Wix) to navigate.
-  // ✅ Wix page code should listen for COACH_OFFICE_NAVIGATE and call wixLocation.to(path)
   function navigateTo(path){
     setError("");
     $actionStatus.textContent = "Opening…";
@@ -395,7 +393,6 @@
     setTimeout(()=> { $actionStatus.textContent = "Ready."; }, 900);
   }
 
-  // Requested routes
   $btnPlayerDev.addEventListener("click", ()=> navigateTo("/player-development"));
   $btnSessionPlanning.addEventListener("click", ()=> navigateTo("/session-planning"));
   $btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard-v2"));
@@ -403,24 +400,9 @@
   $btnScheduleList.addEventListener("click", ()=> navigateTo("/schedule-list"));
 
   // ----------------------------
-  // To-do storage
+  // To-dos come from Wix CMS now
   // ----------------------------
-  const LS_KEY = "coachOffice.todos.v1";
-
-  function loadTodos(){
-    try{
-      const raw = localStorage.getItem(LS_KEY);
-      const arr = raw ? JSON.parse(raw) : [];
-      return Array.isArray(arr) ? arr : [];
-    }catch(_){
-      return [];
-    }
-  }
-  function saveTodos(arr){
-    localStorage.setItem(LS_KEY, JSON.stringify(arr || []));
-  }
-
-  let todos = loadTodos();
+  let todos = []; // each item: { _id, text, createdAt }
 
   function fmtStamp(ts){
     try{
@@ -443,7 +425,7 @@
       return;
     }
 
-    todos.forEach((t, idx) => {
+    todos.forEach((t) => {
       const div = document.createElement("div");
       div.className = "todoItem";
 
@@ -474,9 +456,11 @@
         </svg>
       `;
       del.addEventListener("click", () => {
-        todos.splice(idx, 1);
-        saveTodos(todos);
-        renderTodos();
+        if (!t._id) return;
+        setError("");
+        try{
+          window.parent.postMessage({ type:"COACH_TODO_DELETE", id: t._id }, "*");
+        }catch(_){}
       });
 
       div.appendChild(left);
@@ -485,27 +469,26 @@
     });
   }
 
-  function addTodoFromInput(){
+  function requestAddTodo(){
     setError("");
     const text = String($todoInput.value || "").trim();
     if (!text){
       setError("Please type a to-do item first.");
       return;
     }
-    const item = { text, createdAt: Date.now() };
-    todos.unshift(item);
-    saveTodos(todos);
     $todoInput.value = "";
-    renderTodos();
+    try{
+      window.parent.postMessage({ type:"COACH_TODO_ADD", text }, "*");
+    }catch(_){}
   }
 
-  $btnAddTodo.addEventListener("click", addTodoFromInput);
+  $btnAddTodo.addEventListener("click", requestAddTodo);
   $todoInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") addTodoFromInput();
+    if (e.key === "Enter") requestAddTodo();
   });
 
   // ----------------------------
-  // Receive init from Wix
+  // Receive init + updates from Wix
   // ----------------------------
   window.addEventListener("message", (ev) => {
     const data = ev.data;
@@ -522,20 +505,19 @@
       const coachLabel = data.coachName ? String(data.coachName) : "Coach";
       $coachNameText.textContent = coachLabel;
 
-      if (Array.isArray(data.todos)){
-        todos = data.todos.map(x => ({
-          text: String(x?.text || "").trim(),
-          createdAt: x?.createdAt || Date.now()
-        })).filter(x => x.text);
-        saveTodos(todos);
-      }
+      todos = Array.isArray(data.todos) ? data.todos : [];
+      renderTodos();
+      return;
+    }
 
+    if (data.type === "COACH_TODOS_UPDATED"){
+      todos = Array.isArray(data.todos) ? data.todos : [];
       renderTodos();
       return;
     }
   });
 
-  // Defaults if Wix never sends init
+  // Defaults
   $coachNameText.textContent = "Coach";
   renderTodos();
 
