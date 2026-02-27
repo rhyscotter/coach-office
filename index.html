@@ -351,16 +351,32 @@
 <script>
   // ----------------------------
   // Theming: prefer payload.theme
+  // ✅ UPDATE: accept BOTH shapes:
+  //    - data.theme
+  //    - data.payload.theme
   // ----------------------------
+  function extractTheme(data){
+    // your old shape (COACH_OFFICE_INIT passes theme at root)
+    if (data && data.theme) return data.theme;
+    // dashboard-like shape ({ type, payload: { theme } })
+    if (data && data.payload && data.payload.theme) return data.payload.theme;
+    return null;
+  }
+
   function applyThemeFromPayload(payload){
-    const theme = payload?.theme || null;
+    const theme = extractTheme(payload) || null;
+
     const accent  = (theme?.accent  || "#7B2EFF");
     const accent2 = (theme?.accent2 || accent);
     const glow    = (theme?.glow    || "rgba(123,46,255,.18)");
+
     const r = document.documentElement.style;
     r.setProperty("--accent", accent);
     r.setProperty("--accent2", accent2);
     r.setProperty("--clubGlow", glow);
+
+    // ✅ helpful debug (doesn't affect behavior)
+    try { console.log("🟪 COACH OFFICE IFRAME: theme applied", { accent, accent2, glow }); } catch(_) {}
   }
 
   function safe(s){ return String(s ?? "").replace(/[<>]/g,""); }
@@ -493,6 +509,9 @@
   window.addEventListener("message", (ev) => {
     const data = ev.data;
     if (!data) return;
+
+    // ✅ debug: show message types (no behavior change)
+    try { console.log("🟪 COACH OFFICE IFRAME: received", data?.type || "(no type)"); } catch(_) {}
 
     if (data.type === "COACH_OFFICE_ERROR"){
       setError(data.message || "Something went wrong.");
