@@ -399,19 +399,34 @@
 
   // ----------------------------
   // Navigation (Wix will route)
+  // ✅ FIX: send both message shapes so it always works
+  // ✅ FIX: correct coach dashboard route to /coach-dashboard
   // ----------------------------
+  function postNav(path){
+    // 1) current shape used here already
+    try{ window.parent.postMessage({ type:"COACH_OFFICE_NAVIGATE", path }, "*"); }catch(_){}
+    // 2) payload shape (some pages use { payload: { path } })
+    try{ window.parent.postMessage({ type:"COACH_OFFICE_NAVIGATE", payload:{ path } }, "*"); }catch(_){}
+    // 3) generic NAVIGATE fallback (if you use it elsewhere)
+    try{ window.parent.postMessage({ type:"NAVIGATE", path }, "*"); }catch(_){}
+    try{ window.parent.postMessage({ type:"NAVIGATE", payload:{ path } }, "*"); }catch(_){}
+    // 4) top fallback (rare but helps in some Wix iframe contexts)
+    try{ window.top.postMessage({ type:"COACH_OFFICE_NAVIGATE", path }, "*"); }catch(_){}
+    try{ window.top.postMessage({ type:"COACH_OFFICE_NAVIGATE", payload:{ path } }, "*"); }catch(_){}
+    try{ window.top.postMessage({ type:"NAVIGATE", path }, "*"); }catch(_){}
+    try{ window.top.postMessage({ type:"NAVIGATE", payload:{ path } }, "*"); }catch(_){}
+  }
+
   function navigateTo(path){
     setError("");
     $actionStatus.textContent = "Opening…";
-    try{
-      window.parent.postMessage({ type:"COACH_OFFICE_NAVIGATE", path }, "*");
-    }catch(_){}
+    postNav(path);
     setTimeout(()=> { $actionStatus.textContent = "Ready."; }, 900);
   }
 
   $btnPlayerDev.addEventListener("click", ()=> navigateTo("/player-development"));
   $btnSessionPlanning.addEventListener("click", ()=> navigateTo("/session-planning"));
-  $btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard-v2"));
+  $btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard"));  // ✅ FIXED (was /coach-dashboard-v2)
   $btnModules.addEventListener("click", ()=> navigateTo("/modules-homepage"));
   $btnScheduleList.addEventListener("click", ()=> navigateTo("/schedule-list"));
 
