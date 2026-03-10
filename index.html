@@ -285,37 +285,42 @@
             </div>
 
             <div class="menuGrid">
-              <button class="menuCard" id="btnPlayerDev" type="button">
-                <div class="menuTitle">Player Development</div>
-                <div class="menuDesc">IDPs, goals, feedback, progress tracking.</div>
-                <div class="menuBadge">Go</div>
-              </button>
+  <button class="menuCard" id="btnPlayerDev" type="button">
+    <div class="menuTitle">Player Development</div>
+    <div class="menuDesc">IDPs, goals, feedback, progress tracking.</div>
+    <div class="menuBadge">Go</div>
+  </button>
 
-              <button class="menuCard" id="btnSessionPlanning" type="button">
-                <div class="menuTitle">Session Planning</div>
-                <div class="menuDesc">Build sessions, patterns, diagrams, clips.</div>
-                <div class="menuBadge">Go</div>
-              </button>
+  <button class="menuCard" id="btnSessionPlanning" type="button">
+    <div class="menuTitle">Session Planning</div>
+    <div class="menuDesc">Build sessions, patterns, diagrams, clips.</div>
+    <div class="menuBadge">Go</div>
+  </button>
 
-              <button class="menuCard" id="btnCoachDashboard" type="button">
-                <div class="menuTitle">Coach Dashboard</div>
-                <div class="menuDesc">Schedule, team tools, alerts, admin.</div>
-                <div class="menuBadge">Go</div>
-              </button>
+  <button class="menuCard" id="btnCoachDashboard" type="button">
+    <div class="menuTitle">Coach Dashboard</div>
+    <div class="menuDesc">Schedule, team tools, alerts, admin.</div>
+    <div class="menuBadge">Go</div>
+  </button>
 
-              <button class="menuCard" id="btnModules" type="button">
-                <div class="menuTitle">Modules</div>
-                <div class="menuDesc">Learning content, curriculum, notes.</div>
-                <div class="menuBadge">Go</div>
-              </button>
+  <button class="menuCard" id="btnModules" type="button">
+    <div class="menuTitle">Modules</div>
+    <div class="menuDesc">Learning content, curriculum, notes.</div>
+    <div class="menuBadge">Go</div>
+  </button>
 
-              <!-- ✅ Added Schedule List (requested route) -->
-              <button class="menuCard" id="btnScheduleList" type="button" style="grid-column: 1 / -1;">
-                <div class="menuTitle">Schedule List</div>
-                <div class="menuDesc">View all upcoming events and sessions.</div>
-                <div class="menuBadge">Go</div>
-              </button>
-            </div>
+  <button class="menuCard" id="btnScheduleList" type="button">
+    <div class="menuTitle">Schedule List</div>
+    <div class="menuDesc">View all upcoming events and sessions.</div>
+    <div class="menuBadge">Go</div>
+  </button>
+
+  <button class="menuCard" id="btnChatInbox" type="button">
+    <div class="menuTitle">Chat / Chat-Inbox</div>
+    <div class="menuDesc">Open coach chat and inbox conversations.</div>
+    <div class="menuBadge">Go</div>
+  </button>
+</div>
 
             <div class="tiny" id="actionStatus">Ready.</div>
             <div id="error"></div>
@@ -387,11 +392,12 @@
   const $todoCount  = document.getElementById("todoCount");
   const $actionStatus = document.getElementById("actionStatus");
 
-  const $btnPlayerDev = document.getElementById("btnPlayerDev");
-  const $btnSessionPlanning = document.getElementById("btnSessionPlanning");
-  const $btnCoachDashboard = document.getElementById("btnCoachDashboard");
-  const $btnModules = document.getElementById("btnModules");
-  const $btnScheduleList = document.getElementById("btnScheduleList");
+ const $btnPlayerDev = document.getElementById("btnPlayerDev");
+const $btnSessionPlanning = document.getElementById("btnSessionPlanning");
+const $btnCoachDashboard = document.getElementById("btnCoachDashboard");
+const $btnModules = document.getElementById("btnModules");
+const $btnScheduleList = document.getElementById("btnScheduleList");
+const $btnChatInbox = document.getElementById("btnChatInbox");
 
   const $todoInput = document.getElementById("todoInput");
   const $btnAddTodo = document.getElementById("btnAddTodo");
@@ -424,11 +430,12 @@
     setTimeout(()=> { $actionStatus.textContent = "Ready."; }, 900);
   }
 
-  $btnPlayerDev.addEventListener("click", ()=> navigateTo("/player-development"));
-  $btnSessionPlanning.addEventListener("click", ()=> navigateTo("/session-planning"));
-  $btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard"));  // ✅ FIXED (was /coach-dashboard-v2)
-  $btnModules.addEventListener("click", ()=> navigateTo("/modules-homepage"));
-  $btnScheduleList.addEventListener("click", ()=> navigateTo("/schedule-list"));
+$btnPlayerDev.addEventListener("click", ()=> navigateTo("/player-development"));
+$btnSessionPlanning.addEventListener("click", ()=> navigateTo("/session-planning"));
+$btnCoachDashboard.addEventListener("click", ()=> navigateTo("/coach-dashboard"));
+$btnModules.addEventListener("click", ()=> navigateTo("/modules-homepage"));
+$btnScheduleList.addEventListener("click", ()=> navigateTo("/schedule-list"));
+$btnChatInbox.addEventListener("click", ()=> navigateTo("/chat-inbox"));
 
   // ----------------------------
   // To-dos come from Wix CMS now
